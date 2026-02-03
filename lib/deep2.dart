@@ -18,7 +18,6 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
     });
   }
 
-
   void levelComplete() {
     setState(() {
       if (currentLevel < 3) {
@@ -26,7 +25,6 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
         score += 10;
       } else {
         score += 20;
-        // Game finished, show score and return to tutorial
         showScoreDialog();
       }
     });
@@ -38,7 +36,6 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
     });
   }
 
-// New method to show score dialog
   void showScoreDialog({bool isReset = false}) {
     showDialog(
       context: context,
@@ -85,7 +82,7 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
                     setState(() {
                       currentLevel = 1;
                       score = 0;
-                      showTutorial = true; // return to tutorial
+                      showTutorial = true;
                     });
                     Navigator.of(context).pop();
                   },
@@ -110,8 +107,6 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 768;
@@ -128,7 +123,7 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
         ),
         child: Column(
           children: [
-            // Responsive Header
+            // Header
             Container(
               padding: EdgeInsets.symmetric(
                 vertical: isMobile ? 10 : 15,
@@ -294,7 +289,7 @@ class _GameHomeScreenState extends State<GameHomeScreen> {
                 padding: EdgeInsets.all(isMobile ? 10.0 : 20.0),
                 child: showTutorial
                     ? TutorialScreen(startGame: startGame)
-                    : LevelScreen(
+                    : PizzaOrderScreen(
                   level: currentLevel,
                   onLevelComplete: levelComplete,
                   onReset: resetGame,
@@ -339,7 +334,7 @@ class TutorialScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Welcome to Pizza Conditionals!',
+                'Welcome to Bodas Pizza!',
                 style: TextStyle(
                   fontSize: isMobile ? 24 : 32,
                   fontWeight: FontWeight.bold,
@@ -354,13 +349,12 @@ class TutorialScreen extends StatelessWidget {
                 height: isMobile ? 100 : 150,
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(Icons.emoji_people,
-                      color: Colors.deepOrange,
-                      size: isMobile ? 100 : 150);
+                      color: Colors.deepOrange, size: isMobile ? 100 : 150);
                 },
               ),
               SizedBox(height: isMobile ? 20 : 30),
               Text(
-                'Learn "if, if else, else" statements through pizza making!',
+                'Help customers order their perfect pizza!',
                 style: TextStyle(
                   fontSize: isMobile ? 16 : 20,
                   height: 1.5,
@@ -387,13 +381,26 @@ class TutorialScreen extends StatelessWidget {
                     ),
                     SizedBox(height: isMobile ? 8 : 10),
                     Text(
-                      '1. Read the scenario about making pizza\n'
-                          '2. Drag the correct decision to the empty box\n'
-                          '3. Match the conditional logic: IF, ELSE IF, ELSE\n'
-                          '4. Help Chef Antonio make the right pizza decisions!',
+                      '1. Read the customer\'s button presses\n'
+                          '2. Match the button sequence to the correct order\n'
+                          '3. Drag the correct conditional logic to build the order\n'
+                          '4. Help prepare the perfect pizza every time!',
                       style: TextStyle(
                         fontSize: isMobile ? 14 : 18,
                         height: 1.6,
+                      ),
+                    ),
+                    SizedBox(height: isMobile ? 10 : 15),
+                    Text(
+                      'Button Guide:\n'
+                          '• 1 = Pizza, 2 = Tacos\n'
+                          '• 0 = Small, 1 = Medium, 2 = Large, 3 = Extra Large\n'
+                          '• 0 = No Extra Cheese, 1 = Extra Cheese\n'
+                          '• 0 = Takeaway, 2 = Eat in Restaurant',
+                      style: TextStyle(
+                        fontSize: isMobile ? 14 : 16,
+                        height: 1.6,
+                        color: Colors.brown,
                       ),
                     ),
                   ],
@@ -414,7 +421,7 @@ class TutorialScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Start Cooking!',
+                  'Start Taking Orders!',
                   style: TextStyle(fontSize: isMobile ? 18 : 22),
                 ),
               ),
@@ -426,12 +433,12 @@ class TutorialScreen extends StatelessWidget {
   }
 }
 
-class LevelScreen extends StatefulWidget {
+class PizzaOrderScreen extends StatefulWidget {
   final int level;
   final VoidCallback onLevelComplete;
   final VoidCallback onReset;
 
-  const LevelScreen({
+  const PizzaOrderScreen({
     super.key,
     required this.level,
     required this.onLevelComplete,
@@ -439,10 +446,10 @@ class LevelScreen extends StatefulWidget {
   });
 
   @override
-  State<LevelScreen> createState() => _LevelScreenState();
+  State<PizzaOrderScreen> createState() => _PizzaOrderScreenState();
 }
 
-class _LevelScreenState extends State<LevelScreen> {
+class _PizzaOrderScreenState extends State<PizzaOrderScreen> {
   String? draggedItem;
   String? droppedItem;
   bool isCorrect = false;
@@ -450,53 +457,64 @@ class _LevelScreenState extends State<LevelScreen> {
 
   final Map<int, Map<String, dynamic>> levelData = {
     1: {
-      'title': 'Level 1: The Plain Cheese Decision',
+      'title': 'Level 1: Client 1 Order',
       'scenario':
-      'Chef Antonio needs to decide what to do when a customer orders a cheese pizza.',
-      'condition': 'IF the customer wants extra cheese, add double cheese.',
-      'question': 'What should Chef Antonio do?',
+      'Client 1 pressed: 1, then 0, then 1, then 2.\n\nWhat is the correct order?',
+      'condition': 'Order Options (Choose the correct one):',
+      'question': 'Drag the correct order to the receipt:',
       'options': [
-        'Add double cheese',
-        'Add no cheese',
-        'Make a pepperoni pizza instead',
+        'A) Small Pizza with Extra Cheese to eat In Restaurant',
+        'B) Medium Pizza with No Extra Cheese for Takeaway',
+        'C) Large Tacos with Extra Cheese to eat In Restaurant',
+        'D) Small Tacos with No Extra Cheese for Takeaway',
+        'E) Extra Large Pizza with Extra Cheese for Takeaway',
+        'F) Medium Tacos with Extra Cheese to eat In Restaurant',
       ],
-      'correctAnswer': 'Add double cheese',
+      'correctAnswer': 'A) Small Pizza with Extra Cheese to eat In Restaurant',
       'explanation':
-      'Great! This is a simple IF statement. IF the condition is true (customer wants extra cheese), then do the action (add double cheese).',
+      '✅ Correct! The button sequence 1-0-1-2 means:\n• 1 = Pizza\n• 0 = Small\n• 1 = Extra Cheese\n• 2 = Eat in Restaurant\n\nThis is like programming logic: IF button1 == 1 THEN item = "Pizza"',
+      'orderDisplay': '✅ Client 1 Order: Small Pizza with Extra Cheese to eat In Restaurant',
+      'buttonSequence': 'Button Sequence: 1 → 0 → 1 → 2',
     },
     2: {
-      'title': 'Level 2: The Topping Dilemma',
+      'title': 'Level 2: Client 2 Order',
       'scenario':
-      'A customer is ordering a pizza but can\'t decide between pepperoni or mushrooms.',
-      'condition':
-      'IF the customer chooses pepperoni, add pepperoni. ELSE IF they choose mushrooms, add mushrooms.',
-      'question': 'How should Chef Antonio decide?',
+      'Client 2 pressed: 2, then 2, then 0, then 0.\n\nWhat is the correct order?',
+      'condition': 'Order Options (Choose the correct one):',
+      'question': 'Drag the correct order to the receipt:',
       'options': [
-        'Add both pepperoni and mushrooms',
-        'IF pepperoni then add pepperoni, ELSE IF mushrooms then add mushrooms',
-        'Make a plain cheese pizza',
+        'A) Small Pizza with Extra Cheese to eat In Restaurant',
+        'B) Large Tacos with No Extra Cheese for Takeaway',
+        'C) Medium Pizza with No Extra Cheese for Takeaway',
+        'D) Extra Large Tacos with Extra Cheese to eat In Restaurant',
+        'E) Medium Tacos with No Extra Cheese to eat In Restaurant',
+        'F) Small Tacos with Extra Cheese for Takeaway',
       ],
-      'correctAnswer':
-      'IF pepperoni then add pepperoni, ELSE IF mushrooms then add mushrooms',
+      'correctAnswer': 'B) Large Tacos with No Extra Cheese for Takeaway',
       'explanation':
-      'Excellent! This is an IF-ELSE IF statement. We check multiple conditions one after another.',
+      '✅ Perfect! The button sequence 2-2-0-0 means:\n• 2 = Tacos\n• 2 = Large\n• 0 = No Extra Cheese\n• 0 = Takeaway\n\nThis uses ELSE IF logic: IF button1 == 1 THEN pizza ELSE IF button1 == 2 THEN tacos',
+      'orderDisplay': '✅ Client 2 Order: Large Tacos with No Extra Cheese for Takeaway',
+      'buttonSequence': 'Button Sequence: 2 → 2 → 0 → 0',
     },
     3: {
-      'title': 'Level 3: The Complete Pizza Decision',
+      'title': 'Level 3: Client 3 Order',
       'scenario':
-      'Chef Antonio needs to handle all possible pizza orders: pepperoni, vegetarian, or anything else.',
-      'condition':
-      'IF pepperoni, add pepperoni. ELSE IF vegetarian, add vegetables. ELSE, make a cheese pizza.',
-      'question': 'What is the complete decision logic?',
+      'Client 3 pressed: 1, then 3, then 1, then 0.\n\nWhat is the correct order?',
+      'condition': 'Order Options (Choose the correct one):',
+      'question': 'Drag the correct order to the receipt:',
       'options': [
-        'Always make pepperoni pizza',
-        'IF pepperoni add pepperoni, ELSE add cheese',
-        'IF pepperoni add pepperoni, ELSE IF vegetarian add vegetables, ELSE add cheese',
+        'A) Small Pizza with No Extra Cheese to eat In Restaurant',
+        'B) Extra Large Pizza with Extra Cheese for Takeaway',
+        'C) Medium Tacos with Extra Cheese to eat In Restaurant',
+        'D) Large Pizza with Extra Cheese for Takeaway',
+        'E) Small Tacos with No Extra Cheese to eat In Restaurant',
+        'F) Extra Large Tacos with Extra Cheese for Takeaway',
       ],
-      'correctAnswer':
-      'IF pepperoni add pepperoni, ELSE IF vegetarian add vegetables, ELSE add cheese',
+      'correctAnswer': 'B) Extra Large Pizza with Extra Cheese for Takeaway',
       'explanation':
-      'Perfect! This is a complete IF-ELSE IF-ELSE statement. It handles all possible cases!',
+      '✅ Excellent! The button sequence 1-3-1-0 means:\n• 1 = Pizza\n• 3 = Extra Large\n• 1 = Extra Cheese\n• 0 = Takeaway\n\nThis demonstrates complex conditionals:\nIF size == 0 THEN "Small"\nELSE IF size == 1 THEN "Medium"\nELSE IF size == 2 THEN "Large"\nELSE "Extra Large"',
+      'orderDisplay': '✅ Client 3 Order: Extra Large Pizza with Extra Cheese for Takeaway',
+      'buttonSequence': 'Button Sequence: 1 → 3 → 1 → 0',
     },
   };
 
@@ -526,7 +544,7 @@ class _LevelScreenState extends State<LevelScreen> {
     final data = levelData[widget.level]!;
 
     if (isMobile) {
-      // Mobile layout - vertical stacking
+      // Mobile layout
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -560,24 +578,26 @@ class _LevelScreenState extends State<LevelScreen> {
                     ),
                     const SizedBox(height: 15),
                     _buildInfoCard(
-                      'Scenario:',
+                      'Customer Order:',
                       data['scenario'],
                       Colors.orange[50]!,
                       Colors.brown,
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 10),
                     _buildInfoCard(
-                      'Conditional Logic:',
-                      data['condition'],
-                      Colors.green[50]!,
-                      Colors.green,
-                    ),
-                    const SizedBox(height: 15),
-                    _buildInfoCard(
-                      'Question:',
-                      data['question'],
+                      data['buttonSequence'],
+                      'Decode the sequence to build the order',
                       Colors.blue[50]!,
                       Colors.blue,
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      data['question'],
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.brown,
+                      ),
                     ),
                     if (showFeedback) ...[
                       const SizedBox(height: 15),
@@ -591,7 +611,7 @@ class _LevelScreenState extends State<LevelScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isCorrect ? 'Correct! 🎉' : 'Not quite right 😢',
+                              isCorrect ? 'Correct Order! 🍕' : 'Wrong Order 😢',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -602,9 +622,43 @@ class _LevelScreenState extends State<LevelScreen> {
                             Text(
                               isCorrect
                                   ? data['explanation']
-                                  : 'Try again! Drag a different option.',
+                                  : 'Try again! The customer will be unhappy with the wrong order.',
                               style: const TextStyle(fontSize: 16, height: 1.5),
                             ),
+                            if (isCorrect) ...[
+                              const SizedBox(height: 10),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.green[50],
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.green, width: 2),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '✅ CORRECT ORDER!',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      data['orderDisplay'],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -613,7 +667,7 @@ class _LevelScreenState extends State<LevelScreen> {
                 ),
               ),
 
-              // Drag and Drop Area
+              // Order Receipt Area
               Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
@@ -629,100 +683,94 @@ class _LevelScreenState extends State<LevelScreen> {
                 ),
                 child: Column(
                   children: [
-                    // Chef and Drop Target
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/chef.png',
-                              width: 60,
-                              height: 60,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.emoji_people,
-                                    color: Colors.deepOrange, size: 60);
-                              },
+                    // Receipt Header
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.receipt, color: Colors.white),
+                          SizedBox(width: 10),
+                          Text(
+                            'BODAS PIZZA RECEIPT',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                            const SizedBox(width: 10),
-                            const Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Chef Antonio says:',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.brown,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    '"Help me decide what to do!"',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Drop Target for Receipt
+                    DragTarget<String>(
+                      builder: (context, candidateData, rejectedData) {
+                        return Container(
+                          width: double.infinity,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: droppedItem == null
+                                ? Colors.grey[50]
+                                : (isCorrect ? Colors.green[50] : Colors.red[50]),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: droppedItem == null
+                                  ? Colors.grey
+                                  : (isCorrect ? Colors.green : Colors.red),
+                              width: 3,
+                              style: BorderStyle.solid,
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        // Drop Target for mobile
-                        DragTarget<String>(
-                          builder: (context, candidateData, rejectedData) {
-                            return Container(
-                              width: double.infinity,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: droppedItem == null
-                                    ? Colors.grey[100]
-                                    : (isCorrect
-                                    ? Colors.green[100]
-                                    : Colors.red[100]),
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: droppedItem == null
-                                      ? Colors.grey
-                                      : (isCorrect ? Colors.green : Colors.red),
-                                  width: 3,
-                                ),
-                              ),
-                              child: Center(
-                                child: droppedItem == null
-                                    ? const Text(
-                                  'Drop decision here!',
+                          ),
+                          child: Center(
+                            child: droppedItem == null
+                                ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.upload,
+                                    color: Colors.grey, size: 30),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Drag Order Here',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
                                   ),
-                                )
-                                    : Text(
-                                  droppedItem!,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: isCorrect
-                                        ? Colors.green
-                                        : Colors.red,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
+                              ],
+                            )
+                                : Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                droppedItem!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: isCorrect
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            );
-                          },
-                          onAccept: (data) {
-                            checkAnswer(data);
-                          },
-                        ),
-                      ],
+                            ),
+                          ),
+                        );
+                      },
+                      onAccept: (data) {
+                        checkAnswer(data);
+                      },
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
                     Text(
-                      'Drag the correct decision:',
+                      'Available Orders:',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.brown[800],
@@ -731,7 +779,7 @@ class _LevelScreenState extends State<LevelScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Options for mobile
+                    // Order Options
                     Column(
                       children: (data['options'] as List<String>)
                           .map((option) => Padding(
@@ -768,8 +816,8 @@ class _LevelScreenState extends State<LevelScreen> {
                             decoration: BoxDecoration(
                               color: Colors.grey[300],
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                  color: Colors.grey, width: 2),
+                              border:
+                              Border.all(color: Colors.grey, width: 2),
                             ),
                             child: Text(
                               option,
@@ -804,7 +852,7 @@ class _LevelScreenState extends State<LevelScreen> {
                     ),
 
                     const SizedBox(height: 25),
-                    // Game Controls for mobile
+                    // Game Controls
                     Column(
                       children: [
                         ElevatedButton.icon(
@@ -825,7 +873,7 @@ class _LevelScreenState extends State<LevelScreen> {
                           ),
                           icon: const Icon(Icons.refresh),
                           label: const Text(
-                            'Reset Level',
+                            'Clear Receipt',
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -842,7 +890,7 @@ class _LevelScreenState extends State<LevelScreen> {
                           ),
                           icon: const Icon(Icons.restart_alt),
                           label: const Text(
-                            'Restart Game',
+                            'Restaurant Closed',
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -857,11 +905,11 @@ class _LevelScreenState extends State<LevelScreen> {
       );
     }
 
-    // Desktop/Tablet layout - horizontal
+    // Desktop/Tablet layout
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left Panel - Scenario and Instructions
+        // Left Panel - Order Information
         Expanded(
           flex: isTablet ? 1 : 2,
           child: Container(
@@ -892,27 +940,52 @@ class _LevelScreenState extends State<LevelScreen> {
                   ),
                   const SizedBox(height: 20),
                   _buildInfoCard(
-                    'Scenario:',
+                    'Customer Button Presses:',
                     data['scenario'],
                     Colors.orange[50]!,
                     Colors.brown,
                     isTablet: isTablet,
                   ),
                   SizedBox(height: isTablet ? 15 : 25),
-                  _buildInfoCard(
-                    'Conditional Logic:',
-                    data['condition'],
-                    Colors.green[50]!,
-                    Colors.green,
-                    isTablet: isTablet,
+                  Container(
+                    padding: EdgeInsets.all(isTablet ? 15 : 20),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Button Decoding Guide:',
+                          style: TextStyle(
+                            fontSize: isTablet ? 16 : 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        SizedBox(height: isTablet ? 8 : 10),
+                        Text(
+                          'Food: 1 = Pizza, 2 = Tacos\n'
+                              'Size: 0 = Small, 1 = Medium, 2 = Large, 3 = Extra Large\n'
+                              'Cheese: 0 = No Extra, 1 = Extra Cheese\n'
+                              'Service: 0 = Takeaway, 2 = Eat In',
+                          style: TextStyle(
+                            fontSize: isTablet ? 14 : 18,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: isTablet ? 15 : 25),
-                  _buildInfoCard(
-                    'Question:',
+                  Text(
                     data['question'],
-                    Colors.blue[50]!,
-                    Colors.blue,
-                    isTablet: isTablet,
+                    style: TextStyle(
+                      fontSize: isTablet ? 16 : 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown,
+                    ),
                   ),
                   if (showFeedback) ...[
                     SizedBox(height: isTablet ? 15 : 25),
@@ -926,9 +999,9 @@ class _LevelScreenState extends State<LevelScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isCorrect ? 'Correct! 🎉' : 'Not quite right 😢',
+                            isCorrect ? 'Order Accepted! 🎯' : 'Order Rejected ❌',
                             style: TextStyle(
-                              fontSize: isTablet ? 18 : 20,
+                              fontSize: isTablet ? 18 : 22,
                               fontWeight: FontWeight.bold,
                               color: isCorrect ? Colors.green : Colors.red,
                             ),
@@ -937,12 +1010,32 @@ class _LevelScreenState extends State<LevelScreen> {
                           Text(
                             isCorrect
                                 ? data['explanation']
-                                : 'Try again! Drag a different option.',
+                                : 'That\'s not what the customer ordered! Try again.',
                             style: TextStyle(
                               fontSize: isTablet ? 16 : 18,
                               height: 1.5,
                             ),
                           ),
+                          if (isCorrect) ...[
+                            SizedBox(height: isTablet ? 10 : 15),
+                            Container(
+                              padding: EdgeInsets.all(isTablet ? 12 : 15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.green),
+                              ),
+                              child: Text(
+                                data['orderDisplay'],
+                                style: TextStyle(
+                                  fontSize: isTablet ? 16 : 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -953,15 +1046,15 @@ class _LevelScreenState extends State<LevelScreen> {
           ),
         ),
 
-        // Right Panel - Drag and Drop Game
+        // Right Panel - Order Processing
         Expanded(
           flex: isTablet ? 1 : 3,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Kitchen Area
+                // Restaurant Scene
                 Container(
-                  height: isTablet ? 250 : 300,
+                  height: isTablet ? 200 : 250,
                   padding: EdgeInsets.all(isTablet ? 15 : 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -975,241 +1068,322 @@ class _LevelScreenState extends State<LevelScreen> {
                     ],
                     image: const DecorationImage(
                       image: NetworkImage(
-                        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800',
+                        'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?auto=format&fit=crop&w=800',
                       ),
                       fit: BoxFit.cover,
                       opacity: 0.1,
                     ),
                   ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/chef.png',
-                              width: isTablet ? 80 : 100,
-                              height: isTablet ? 80 : 100,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(Icons.emoji_people,
-                                    color: Colors.deepOrange,
-                                    size: isTablet ? 80 : 100);
-                              },
-                            ),
-                            SizedBox(width: isTablet ? 15 : 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Chef Antonio says:',
-                                  style: TextStyle(
-                                    fontSize: isTablet ? 16 : 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.brown,
-                                  ),
-                                ),
-                                SizedBox(height: isTablet ? 5 : 10),
-                                Text(
-                                  '"Help me decide what to do!\nDrag the correct answer here."',
-                                  style: TextStyle(
-                                    fontSize: isTablet ? 14 : 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: isTablet ? 20 : 40),
-                        // Drop Target
-                        DragTarget<String>(
-                          builder: (context, candidateData, rejectedData) {
-                            return Container(
-                              width: double.infinity,
-                              height: isTablet ? 80 : 100,
-                              decoration: BoxDecoration(
-                                color: droppedItem == null
-                                    ? Colors.grey[100]
-                                    : (isCorrect
-                                    ? Colors.green[100]
-                                    : Colors.red[100]),
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: droppedItem == null
-                                      ? Colors.grey
-                                      : (isCorrect ? Colors.green : Colors.red),
-                                  width: 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/chef.png',
+                            width: isTablet ? 60 : 80,
+                            height: isTablet ? 60 : 80,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(Icons.emoji_people,
+                                  color: Colors.deepOrange,
+                                  size: isTablet ? 60 : 80);
+                            },
+                          ),
+                          SizedBox(width: isTablet ? 15 : 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Chef Antonio says:',
+                                style: TextStyle(
+                                  fontSize: isTablet ? 16 : 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown,
                                 ),
                               ),
-                              child: Center(
-                                child: droppedItem == null
-                                    ? Text(
-                                  'Drop your decision here!',
-                                  style: TextStyle(
-                                    fontSize: isTablet ? 16 : 20,
-                                    color: Colors.grey,
-                                  ),
-                                )
-                                    : Text(
-                                  droppedItem!,
-                                  style: TextStyle(
-                                    fontSize: isTablet ? 16 : 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: isCorrect
-                                        ? Colors.green
-                                        : Colors.red,
-                                  ),
-                                  textAlign: TextAlign.center,
+                              SizedBox(height: isTablet ? 5 : 10),
+                              Text(
+                                '"Match the button sequence\nto prepare the correct order!"',
+                                style: TextStyle(
+                                  fontSize: isTablet ? 14 : 16,
                                 ),
                               ),
-                            );
-                          },
-                          onAccept: (data) {
-                            checkAnswer(data);
-                          },
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: isTablet ? 20 : 30),
+                      Text(
+                        data['buttonSequence'],
+                        style: TextStyle(
+                          fontSize: isTablet ? 18 : 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepOrange,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
 
                 SizedBox(height: isTablet ? 20 : 30),
 
-                // Decision Options
-                Text(
-                  'Drag the correct decision to the box above:',
-                  style: TextStyle(
-                    fontSize: isTablet ? 16 : 18,
-                    color: Colors.brown[800],
-                    fontWeight: FontWeight.bold,
+                // Receipt Area
+                Container(
+                  padding: EdgeInsets.all(isTablet ? 20 : 30),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.brown.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: isTablet ? 15 : 20),
+                  child: Column(
+                    children: [
+                      // Receipt
+                      Container(
+                        padding: EdgeInsets.all(isTablet ? 15 : 20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: droppedItem == null
+                                ? Colors.grey[400]!  // Add ! to make it non-nullable
+                                : (isCorrect ? Colors.green : Colors.red),
+                            width: 2,
+                            style: BorderStyle.solid,  // Changed from 'dashed' to 'solid'
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              '=== BODAS PIZZA ===',
+                              style: TextStyle(
+                                fontSize: isTablet ? 18 : 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                            SizedBox(height: isTablet ? 15 : 20),
+                            DragTarget<String>(
+                              builder: (context, candidateData, rejectedData) {
+                                return Container(
+                                  width: double.infinity,
+                                  height: isTablet ? 100 : 120,
+                                  decoration: BoxDecoration(
+                                    color: droppedItem == null
+                                        ? Colors.white
+                                        : (isCorrect
+                                        ? Colors.green[50]
+                                        : Colors.red[50]),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: droppedItem == null
+                                          ? Colors.grey[400]!  // Add ! to make it non-nullable
+                                          : (isCorrect ? Colors.green : Colors.red),
+                                      width: 2,
+                                      style: BorderStyle.solid,  // Changed from 'dashed' to 'solid'
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: droppedItem == null
+                                        ? Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.receipt_long,
+                                            color: Colors.grey,
+                                            size: 30),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          'Drag Order Here',
+                                          style: TextStyle(
+                                            fontSize: isTablet ? 14 : 16,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                        : Padding(
+                                      padding: EdgeInsets.all(
+                                          isTablet ? 10 : 15),
+                                      child: Text(
+                                        droppedItem!,
+                                        style: TextStyle(
+                                          fontSize: isTablet ? 14 : 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: isCorrect
+                                              ? Colors.green
+                                              : Colors.red,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              onAccept: (data) {
+                                checkAnswer(data);
+                              },
+                            ),
+                            SizedBox(height: isTablet ? 15 : 20),
+                            Text(
+                              'Thank you for your order!',
+                              style: TextStyle(
+                                fontSize: isTablet ? 14 : 16,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                Wrap(
-                  spacing: isTablet ? 10 : 20,
-                  runSpacing: isTablet ? 10 : 20,
-                  alignment: WrapAlignment.center,
-                  children: (data['options'] as List<String>).map((option) {
-                    return Draggable<String>(
-                      data: option,
-                      feedback: Material(
-                        elevation: 8,
-                        borderRadius: BorderRadius.circular(15),
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: isTablet ? 200 : 250,
-                          ),
-                          padding: EdgeInsets.all(isTablet ? 15 : 20),
-                          decoration: BoxDecoration(
-                            color: Colors.orange[100],
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.orange, width: 2),
-                          ),
-                          child: Text(
-                            option,
-                            style: TextStyle(
-                              fontSize: isTablet ? 14 : 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.brown,
+                      SizedBox(height: isTablet ? 20 : 30),
+
+                      Text(
+                        'Available Orders:',
+                        style: TextStyle(
+                          fontSize: isTablet ? 16 : 20,
+                          color: Colors.brown[800],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: isTablet ? 15 : 20),
+
+                      // Order Options
+                      Wrap(
+                        spacing: isTablet ? 10 : 20,
+                        runSpacing: isTablet ? 10 : 20,
+                        alignment: WrapAlignment.center,
+                        children: (data['options'] as List<String>).map((option) {
+                          return Draggable<String>(
+                            data: option,
+                            feedback: Material(
+                              elevation: 8,
+                              borderRadius: BorderRadius.circular(15),
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: isTablet ? 200 : 250,
+                                ),
+                                padding: EdgeInsets.all(isTablet ? 15 : 20),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange[100],
+                                  borderRadius: BorderRadius.circular(15),
+                                  border:
+                                  Border.all(color: Colors.orange, width: 2),
+                                ),
+                                child: Text(
+                                  option,
+                                  style: TextStyle(
+                                    fontSize: isTablet ? 14 : 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.brown,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            childWhenDragging: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: isTablet ? 200 : 250,
+                              ),
+                              padding: EdgeInsets.all(isTablet ? 15 : 20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: Colors.grey, width: 2),
+                              ),
+                              child: Text(
+                                option,
+                                style: TextStyle(
+                                  fontSize: isTablet ? 14 : 18,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: isTablet ? 200 : 250,
+                              ),
+                              padding: EdgeInsets.all(isTablet ? 15 : 20),
+                              decoration: BoxDecoration(
+                                color: Colors.orange[100],
+                                borderRadius: BorderRadius.circular(15),
+                                border:
+                                Border.all(color: Colors.orange, width: 2),
+                              ),
+                              child: Text(
+                                option,
+                                style: TextStyle(
+                                  fontSize: isTablet ? 14 : 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                      SizedBox(height: isTablet ? 25 : 40),
+
+                      // Game Controls
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                draggedItem = null;
+                                droppedItem = null;
+                                showFeedback = false;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isTablet ? 20 : 25,
+                                vertical: isTablet ? 12 : 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            icon: const Icon(Icons.refresh, color: Colors.white),
+                            label: Text(
+                              'Clear Receipt',
+                              style: TextStyle(fontSize: isTablet ? 14 : 18),
                             ),
                           ),
-                        ),
-                      ),
-                      childWhenDragging: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: isTablet ? 200 : 250,
-                        ),
-                        padding: EdgeInsets.all(isTablet ? 15 : 20),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey, width: 2),
-                        ),
-                        child: Text(
-                          option,
-                          style: TextStyle(
-                            fontSize: isTablet ? 14 : 18,
-                            color: Colors.grey,
+                          SizedBox(width: isTablet ? 15 : 20),
+                          ElevatedButton.icon(
+                            onPressed: widget.onReset,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepOrange,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isTablet ? 20 : 25,
+                                vertical: isTablet ? 12 : 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            icon: const Icon(Icons.restart_alt,
+                                color: Colors.white),
+                            label: Text(
+                              'Restart Game',
+                              style: TextStyle(fontSize: isTablet ? 14 : 18),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: isTablet ? 200 : 250,
-                        ),
-                        padding: EdgeInsets.all(isTablet ? 15 : 20),
-                        decoration: BoxDecoration(
-                          color: Colors.orange[100],
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.orange, width: 2),
-                        ),
-                        child: Text(
-                          option,
-                          style: TextStyle(
-                            fontSize: isTablet ? 14 : 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.brown,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-
-                SizedBox(height: isTablet ? 25 : 40),
-
-                // Game Controls
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          draggedItem = null;
-                          droppedItem = null;
-                          showFeedback = false;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isTablet ? 20 : 25,
-                          vertical: isTablet ? 12 : 15,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      icon: const Icon(Icons.refresh, color: Colors.white),
-                      label: Text(
-                        'Reset Level',
-                        style: TextStyle(fontSize: isTablet ? 14 : 18),
-                      ),
-                    ),
-                    SizedBox(width: isTablet ? 15 : 20),
-                    ElevatedButton.icon(
-                      onPressed: widget.onReset,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepOrange,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isTablet ? 20 : 25,
-                          vertical: isTablet ? 12 : 15,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      icon: const Icon(Icons.restart_alt, color: Colors.white),
-                      label: Text(
-                        'Restart Game',
-                        style: TextStyle(fontSize: isTablet ? 14 : 18),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -1220,7 +1394,8 @@ class _LevelScreenState extends State<LevelScreen> {
   }
 
   Widget _buildInfoCard(String title, String content, Color bgColor,
-      Color titleColor, {bool isTablet = false}) {
+      Color titleColor,
+      {bool isTablet = false}) {
     return Container(
       padding: EdgeInsets.all(isTablet ? 15 : 20),
       decoration: BoxDecoration(
