@@ -957,7 +957,7 @@ class _PizzaOrderScreenState extends State<PizzaOrderScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Button Decoding Guide:',
+                          'Guide:',
                           style: TextStyle(
                             fontSize: isTablet ? 16 : 20,
                             fontWeight: FontWeight.bold,
@@ -966,10 +966,7 @@ class _PizzaOrderScreenState extends State<PizzaOrderScreen> {
                         ),
                         SizedBox(height: isTablet ? 8 : 10),
                         Text(
-                          'Food: 1 = Pizza, 2 = Tacos\n'
-                              'Size: 0 = Small, 1 = Medium, 2 = Large, 3 = Extra Large\n'
-                              'Cheese: 0 = No Extra, 1 = Extra Cheese\n'
-                              'Service: 0 = Takeaway, 2 = Eat In',
+                          'Welcome to Bodas Pizza! If you are hungry, you can order a delicious meal by choosing from our menu. Press 1 to order a pizza or 2 to order tacos. After that, select the size you want: press 0 for small, 1 for medium, 2 for large, or 3 for extra large. Do you want extra cheese? Press 0 for no extra cheese or 1 for extra cheese. Finally, decide if you want to eat here or take your order away: press 0 for takeaway or 2 to eat in the restaurant. Once you finish all your choices, your full order will be displayed so you can confirm it.',
                           style: TextStyle(
                             fontSize: isTablet ? 14 : 18,
                             height: 1.5,

@@ -62040,10 +62040,10 @@ l=a0.Cy("Customer Button Presses:",a8.j(0,a2),B.cQ,B.E,b0)
 k=A.c7(a1,b0?15:25,a1)
 j=b0?15:20
 i=A.bl(15)
-h=A.b1("Button Decoding Guide:",a1,a1,A.bi(a1,a1,B.cb,a1,a1,a1,a1,a1,a1,a1,a1,b0?16:20,a1,a1,B.C,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1)
+h=A.b1("Guide:",a1,a1,A.bi(a1,a1,B.cb,a1,a1,a1,a1,a1,a1,a1,a1,b0?16:20,a1,a1,B.C,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1)
 g=A.c7(a1,b0?8:10,a1)
 f=t.E
-j=A.bS(A.ct(A.c([h,g,A.b1("Food: 1 = Pizza, 2 = Tacos\nSize: 0 = Small, 1 = Medium, 2 = Large, 3 = Extra Large\nCheese: 0 = No Extra, 1 = Extra Cheese\nService: 0 = Takeaway, 2 = Eat In",a1,a1,A.bi(a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,b0?14:18,a1,a1,a1,a1,1.5,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1)],f),B.af,B.K,B.D),a1,new A.bn(B.fJ,a1,a1,i,a1,a1,B.w),a1,a1,new A.ao(j,j,j,j),a1)
+j=A.bS(A.ct(A.c([h,g,A.b1("Welcome to Bodas Pizza! If you are hungry, you can order a delicious meal by choosing from our menu. Press 1 to order a pizza or 2 to order tacos. After that, select the size you want: press 0 for small, 1 for medium, 2 for large, or 3 for extra large. Do you want extra cheese? Press 0 for no extra cheese or 1 for extra cheese. Finally, decide if you want to eat here or take your order away: press 0 for takeaway or 2 to eat in the restaurant. Once you finish all your choices, your full order will be displayed so you can confirm it.",a1,a1,A.bi(a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,a1,b0?14:18,a1,a1,a1,a1,1.5,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1)],f),B.af,B.K,B.D),a1,new A.bn(B.fJ,a1,a1,i,a1,a1,B.w),a1,a1,new A.ao(j,j,j,j),a1)
 i=A.c7(a1,b0?15:25,a1)
 h=a8.j(0,a4)
 m=A.c([m,B.f6,l,k,j,i,A.b1(h,a1,a1,A.bi(a1,a1,B.E,a1,a1,a1,a1,a1,a1,a1,a1,b0?16:20,a1,a1,B.C,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1)],f)
